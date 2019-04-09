@@ -52,7 +52,13 @@ int main(int argc, char *argv[])
   std::cout<< w[3] <<std::endl;
    // Setup initial time
   double time = 0.0;
-  w_print = w;
+  // Copy reg type array to printout rarray
+  for (int i = 0; i < Z; i++) {
+    w_print[i] = w[i];
+  }
+  
+  
+  
   std::cout<< w_print[3] <<std::endl;
   // Open a file for data output
   std::ofstream file;
@@ -81,7 +87,10 @@ int main(int argc, char *argv[])
 
     // Periodically add data to the file
     if (step % outputEvery == 0 and step > 0)
-      w_print = w;
+        // Copy reg type array to printout rarray
+      for (int i = 0; i < Z; i++) {
+          w_print[i] = w[i];
+      }
       walkring_output(file, step, time, N, w_print, outputcols);
   }
   
