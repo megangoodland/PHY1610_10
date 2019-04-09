@@ -58,15 +58,9 @@ int main(int argc, char *argv[])
   // Initial output to screen
   walkring_output(file, 0, time, N, w_print, outputcols);
   
-  
-  std::cout << "made it to before hello world" << std::endl;
-  
-  
   // Hello world
   int rank, size;
-  std::cout << "got rank, size" << std::endl;
   MPI_Init(&argc, &argv);
-  std::cout << "init done" << std::endl;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
@@ -84,8 +78,9 @@ int main(int argc, char *argv[])
     time += dt;
 
     // Periodically add data to the file
-    if (step % outputEvery == 0 and step > 0)      
-      walkring_output(file, step, time, N, w, outputcols);
+    if (step % outputEvery == 0 and step > 0)
+      w_print = w;
+      walkring_output(file, step, time, N, w_print, outputcols);
   }
   
   // Close file
