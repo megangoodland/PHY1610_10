@@ -54,12 +54,9 @@ int main(int argc, char *argv[])
   double time = 0.0;
   // Copy reg type array to printout rarray
   for (int i = 0; i < Z; i++) {
-    w_print[i] = w[i];
-  }
+    w_print[i] = w[i];}
   
   
-  
-  std::cout<< w_print[3] <<std::endl;
   // Open a file for data output
   std::ofstream file;
   walkring_output_init(file, datafile);  
@@ -72,13 +69,22 @@ int main(int argc, char *argv[])
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
-  MPI_Finalize();
+  
+  const int local_length = Z/size; // length of local arrays. Length of global array will be Z.
+  int localdata[]; // buffer of data to hold set of elements
+
+  MPI_Scatter(w, local_length, MPI_INT, localdata, local_length, MPI_INT, 0, MPI_COMM_WORLD);
+  int hilocals = ((sizeof localdata) / (sizeof localdata[0])); // getting length of w
+  std::cout<< "Hello again from task " + std::to_string(rank) + ". My localdata length is: " + std::to_string(hilocals) + " world\n";
+  
+  MPI_Gather(localdata, local_length, MPI_INT, w, local_length, MPI_INT, 0, MPI_COMM_WORLD);
   
   //int w_new[] = w; // Turning rarray into a regular C++ array for MPI
   
   // Time evolution
   for (int step = 1; step <= numSteps; step++) {
-
+    
+    // Want the input for walkring timestep to be the smaller arrays
     // Compute next time point
     walkring_timestep(w, N, p, rank, size, Z);
     // Copy reg type array to printout rarray
@@ -86,11 +92,20 @@ int main(int argc, char *argv[])
     // Update time
     time += dt;
 
+    // the gather
+//    if (rank == 0) {
+//      for (int i=0; i<size; i++) { // for every processor
+//        std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
+//        for int j=0; j<local_length; j++){ // for every element in the processor's local data
+//          globaldata[i] = localdata[j];}
+//      }
+//    }
     // Periodically add data to the file
     if (step % outputEvery == 0 and step > 0)
       walkring_output(file, step, time, N, w_print, outputcols);
   }
   
+  MPI_Finalize();
   // Close file
   walkring_output_finish(file);
 
