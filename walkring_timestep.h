@@ -26,6 +26,6 @@
 //  have been given a chance to move on position to the left or two
 //  the right).
 //
-void walkring_timestep(int walkerpositions[], int N, double prob, int rank, int size);
+void walkring_timestep(int walkerpositions[], int N, double prob, int rank, int size, int length);
 
 #endif
