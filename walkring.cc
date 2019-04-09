@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
   std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
   
   const int local_length = Z/size; // length of local arrays. Length of global array will be Z.
-  int localdata[]; // buffer of data to hold set of elements
+  int localdata[local_length]; // buffer of data to hold set of elements
 
   MPI_Scatter(w, local_length, MPI_INT, localdata, local_length, MPI_INT, 0, MPI_COMM_WORLD);
   int hilocals = ((sizeof localdata) / (sizeof localdata[0])); // getting length of w
