@@ -63,19 +63,18 @@ int main(int argc, char *argv[])
   // Initial output to screen
   walkring_output(file, 0, time, N, w_print, outputcols);
   
-  // Hello world
+  // Starting up with the MPI
   int rank, size;
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
-  std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
   
   const int local_length = Z/size; // length of local arrays. Length of global array will be Z.
   int localdata[local_length]; // buffer of data to hold set of elements
 
   MPI_Scatter(w, local_length, MPI_INT, localdata, local_length, MPI_INT, 0, MPI_COMM_WORLD);
-  int hilocals = ((sizeof localdata) / (sizeof localdata[0])); // getting length of w
-  std::cout<< "Hello again from task " + std::to_string(rank) + ". My localdata length is: " + std::to_string(hilocals) + " world\n";
+  //int hilocals = ((sizeof localdata) / (sizeof localdata[0])); // getting length of local data
+  //std::cout<< "Hello again from task " + std::to_string(rank) + ". My localdata length is: " + std::to_string(hilocals);
   
   MPI_Gather(localdata, local_length, MPI_INT, w, local_length, MPI_INT, 0, MPI_COMM_WORLD);
   
@@ -84,15 +83,23 @@ int main(int argc, char *argv[])
   // Time evolution
   for (int step = 1; step <= numSteps; step++) {
     
+    MPI_Scatter(w, local_length, MPI_INT, localdata, local_length, MPI_INT, 0, MPI_COMM_WORLD); // Sharing the work
+    
     // Want the input for walkring timestep to be the smaller arrays
-    // Compute next time point
-    walkring_timestep(w, N, p, rank, size, Z);
+    walkring_timestep(localdata, N, p, rank, size, local_length); // Compute next time point
+    
+    MPI_Gather(localdata, local_length, MPI_INT, w, local_length, MPI_INT, 0, MPI_COMM_WORLD); 
     // Copy reg type array to printout rarray
     for (int i = 0; i < Z; i++) w_print[i] = w[i];
     // Update time
     time += dt;
 
-    // the gather
+    // Periodically add data to the file
+    if (step % outputEvery == 0 and step > 0)
+      walkring_output(file, step, time, N, w_print, outputcols);
+  }
+  
+      // the gather
 //    if (rank == 0) {
 //      for (int i=0; i<size; i++) { // for every processor
 //        std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
@@ -100,11 +107,6 @@ int main(int argc, char *argv[])
 //          globaldata[i] = localdata[j];}
 //      }
 //    }
-    // Periodically add data to the file
-    if (step % outputEvery == 0 and step > 0)
-      walkring_output(file, step, time, N, w_print, outputcols);
-  }
-  
   MPI_Finalize();
   // Close file
   walkring_output_finish(file);
