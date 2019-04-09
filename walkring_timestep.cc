@@ -35,6 +35,7 @@
 //
 void walkring_timestep(rarray<int,1>& walkerpositions, int N, double prob, int rank, int size)
 {
+    int size2, rank2;
     MPI_Comm_size(MPI_COMM_WORLD, &size2);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank2);
     std::cout << "Hello again from task " +
