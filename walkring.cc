@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
   for (int step = 1; step <= numSteps; step++) {
 
     // Compute next time point
-    walkring_timestep(w, N, p, rank, size);
+    walkring_timestep(w, N, p, rank, size, w_length);
 
     // Update time
     time += dt;
