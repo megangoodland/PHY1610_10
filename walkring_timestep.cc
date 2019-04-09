@@ -37,7 +37,7 @@ void walkring_timestep(int walkerpositions[], int N, double prob, int rank, int 
 {
     static std::mt19937 engine(13);
     static std::uniform_real_distribution<> uniform;
-    int Z = walkerpositions.size();
+    int Z = ((sizeof walkerpositions) / (sizeof walkerpositions[0]));
     // move all walkers
     for (int i = 0; i < Z; i++) {
         double r = uniform(engine); // draws a random number
