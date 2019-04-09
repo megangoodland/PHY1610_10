@@ -42,14 +42,16 @@ int main(int argc, char *argv[])
   const int outputcols = 48;             // number of columns for sparkline output
     
   // Allocate walker data
-  int w[Z]; // array to hole walker data
-
+  int w[Z]; // array to hold walker data
+  rarray<int,1> w_print(Z); // rarray for copy of w to put in walkring_output
+  
   // Setup initial conditions for w
   std::fill(w,w+Z,(N/2)); // Z is the length of w
  
    // Setup initial time
   double time = 0.0;
-  
+
+  std::ofstream file;
   
   // Starting up with the MPI
   int rank, size;
@@ -59,13 +61,10 @@ int main(int argc, char *argv[])
   
   
   if (rank ==0){
-    rarray<int,1> w_print(Z); // rarray for copy of w to put in walkring_output
-    
     // Copy reg type array to printout rarray
     for (int i = 0; i < Z; i++) {w_print[i] = w[i];}
     
     // Open a file for data output
-    std::ofstream file;
     walkring_output_init(file, datafile); 
     
     // Initial output to screen
