@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 //  w_print.fill(N/2);
   //int w_length = ((sizeof w) / (sizeof w[0])); // getting length of w
   std::fill(w,w+Z,(N/2)); // Z is the length of w
-  std::cout<< w[3] <<std::endl;
+ 
    // Setup initial time
   double time = 0.0;
   // Copy reg type array to printout rarray
@@ -81,7 +81,6 @@ int main(int argc, char *argv[])
 
     // Compute next time point
     walkring_timestep(w, N, p, rank, size, Z);
-    std::cout<< w[3] <<std::endl;
     // Update time
     time += dt;
 
@@ -91,6 +90,8 @@ int main(int argc, char *argv[])
       for (int i = 0; i < Z; i++) {
           w_print[i] = w[i];
       }
+      std::cout<< w[3] <<std::endl;
+      std::cout<< w_print[3] <<std::endl;
       walkring_output(file, step, time, N, w_print, outputcols);
   }
   
