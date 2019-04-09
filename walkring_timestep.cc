@@ -33,15 +33,8 @@
 //  have been given a chance to move on position to the left or two
 //  the right).
 //
-void walkring_timestep(rarray<int,1>& walkerpositions, int N, double prob, int argc, char *argv[])
+void walkring_timestep(rarray<int,1>& walkerpositions, int N, double prob)
 {
-    // Hello world
-    int rank, size;
-    MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
-    MPI_Finalize();
     
     static std::mt19937 engine(13);
     static std::uniform_real_distribution<> uniform;
