@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
   std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
   MPI_Finalize();
   
-  w_new[] = w; // Turning rarray into a regular C++ array for MPI
+  int w_new[] = w; // Turning rarray into a regular C++ array for MPI
   // Time evolution
   for (int step = 1; step <= numSteps; step++) {
 
