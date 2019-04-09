@@ -8,6 +8,7 @@
 
 #include <fstream>
 #include <rarray>
+#include <iostream>
 #include <algorithm>
 #include <cmath>
 #include <mpi.h>
@@ -55,10 +56,12 @@ int main(int argc, char *argv[])
   walkring_output_init(file, datafile);  
   // Initial output to screen
   walkring_output(file, 0, time, N, w, outputcols);
-  
+  std::cout << "made it to before hello world" << std::endl;
   // Hello world
   int rank, size;
+  std::cout << "got rank, size" << std::endl;
   MPI_Init(&argc, &argv);
+  std::cout << "init done" << std::endl;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
@@ -70,7 +73,7 @@ int main(int argc, char *argv[])
   for (int step = 1; step <= numSteps; step++) {
 
     // Compute next time point
-    walkring_timestep(w, N, p, rank, size, w_length);
+    walkring_timestep(w, N, p, rank, size);
 
     // Update time
     time += dt;
@@ -82,7 +85,7 @@ int main(int argc, char *argv[])
   
   // Close file
   walkring_output_finish(file);
-  delete [] w;
+
   // All done
   return 0;
 }
