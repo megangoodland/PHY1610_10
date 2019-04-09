@@ -43,30 +43,34 @@ int main(int argc, char *argv[])
     
   // Allocate walker data
   int w[Z]; // array to hole walker data
-  if (rank ==0){rarray<int,1> w_print(Z);} // rarray for copy of w to put in walkring_output
-  
+
   // Setup initial conditions for w
   std::fill(w,w+Z,(N/2)); // Z is the length of w
  
    // Setup initial time
   double time = 0.0;
   
-  // Copy reg type array to printout rarray
-  for (int i = 0; i < Z; i++) {w_print[i] = w[i];}
-  
-  
-  if (rank == 0){
-    // Open a file for data output
-    std::ofstream file;
-    walkring_output_init(file, datafile);  
-    // Initial output to screen
-    walkring_output(file, 0, time, N, w_print, outputcols);}
   
   // Starting up with the MPI
   int rank, size;
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
+  
+  
+  if (rank ==0){
+    rarray<int,1> w_print(Z); // rarray for copy of w to put in walkring_output
+    
+    // Copy reg type array to printout rarray
+    for (int i = 0; i < Z; i++) {w_print[i] = w[i];}
+    
+    // Open a file for data output
+    std::ofstream file;
+    walkring_output_init(file, datafile); 
+    
+    // Initial output to screen
+    walkring_output(file, 0, time, N, w_print, outputcols);
+  }
   
   const int local_length = Z/size; // length of local arrays. Length of global array will be Z.
   int localdata[local_length]; // buffer of data to hold set of elements
