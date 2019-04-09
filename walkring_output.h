@@ -26,7 +26,7 @@ void walkring_output_init(std::ofstream& file, std::string datafilename);
 //   N:           number of grid points
 //   w:           position of the walkers
 //   outputcols:  width of the output graph.
-void walkring_output(std::ofstream& file, int step, double time, int N, const rarray<int,1> &w, int outputcols);
+void walkring_output(std::ofstream& file, int step, double time, int N, const int &w, int outputcols);
 
 // Finalize output.
 // Arguments:
