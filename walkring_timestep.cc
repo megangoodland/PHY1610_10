@@ -35,7 +35,11 @@
 //
 void walkring_timestep(rarray<int,1>& walkerpositions, int N, double prob, int rank, int size)
 {
-    
+    MPI_Comm_size(MPI_COMM_WORLD, &size2);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank2);
+    std::cout << "Hello again from task " +
+            std::to_string(rank2) + " of " +
+            std::to_string(size2) + "\n";
     static std::mt19937 engine(13);
     static std::uniform_real_distribution<> uniform;
     int Z = walkerpositions.size();
