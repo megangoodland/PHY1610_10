@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
     // Compute next time point
     walkring_timestep(w, N, p, rank, size, Z);
-
+    std::cout<< w[3] <<std::endl;
     // Update time
     time += dt;
 
