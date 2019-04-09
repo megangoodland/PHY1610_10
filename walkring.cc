@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
 //  w_print.fill(N/2);
   //int w_length = ((sizeof w) / (sizeof w[0])); // getting length of w
   std::fill(w,w+Z,(N/2)); // Z is the length of w
+  std::cout<< w[3];
    // Setup initial time
   double time = 0.0;
   w_print = w;
