@@ -50,12 +50,18 @@ int main(int argc, char *argv[])
   walkring_output_init(file, datafile);  
   // Initial output to screen
   walkring_output(file, 0, time, N, w, outputcols);
-
+  // Hello world
+  int rank, size;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
+  MPI_Finalize();
   // Time evolution
   for (int step = 1; step <= numSteps; step++) {
 
     // Compute next time point
-    walkring_timestep(w, N, p, argc, argv);
+    walkring_timestep(w, N, p);
 
     // Update time
     time += dt;
