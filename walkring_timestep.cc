@@ -33,11 +33,11 @@
 //  have been given a chance to move on position to the left or two
 //  the right).
 //
-void walkring_timestep(int walkerpositions[], int N, double prob, int rank, int size)
+void walkring_timestep(int walkerpositions[], int N, double prob, int rank, int size, int length)
 {
     static std::mt19937 engine(13);
     static std::uniform_real_distribution<> uniform;
-    int Z = ((sizeof walkerpositions) / (sizeof walkerpositions[0]));
+    int Z = length;
     // move all walkers
     for (int i = 0; i < Z; i++) {
         double r = uniform(engine); // draws a random number
