@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
   
   // Close file
   walkring_output_finish(file);
-
+  delete [] w;
   // All done
   return 0;
 }
