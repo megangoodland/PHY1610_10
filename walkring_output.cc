@@ -27,8 +27,8 @@ void walkring_output_init(std::ofstream& file, std::string datafilename)
   // Some initial output to screen
   std::cout << "   Step   Time    Walltime(s) Profile"  << std::endl;
 }
-
-void walkring_output(std::ofstream& file, int step, double time, int N, const rarray<int,1> &w, int outputcols)
+// const rarrary<int,1> &w
+void walkring_output(std::ofstream& file, int step, double time, int N, const int &w, int outputcols)
 {
    // Output into a file of file name datafilename. There will be other
    // output to screen as well, such as a little histogram of where the
