@@ -44,19 +44,24 @@ int main(int argc, char *argv[])
   // Allocate walker data
   //rarray<int,1> w(Z);
   int w[Z];
+  rarray<int,1> w_print(Z);
   // Setup initial conditions for w
-  //w.fill(N/2);
-  int w_length = ((sizeof w) / (sizeof w[0])); // getting length of w
+//  w_print.fill(N/2);
+  //int w_length = ((sizeof w) / (sizeof w[0])); // getting length of w
   std::fill(w,w+w_length,(N/2));
    // Setup initial time
   double time = 0.0;
-
+  w_print = w;
   // Open a file for data output
   std::ofstream file;
   walkring_output_init(file, datafile);  
   // Initial output to screen
-  walkring_output(file, 0, time, N, w, outputcols);
+  walkring_output(file, 0, time, N, w_print, outputcols);
+  
+  
   std::cout << "made it to before hello world" << std::endl;
+  
+  
   // Hello world
   int rank, size;
   std::cout << "got rank, size" << std::endl;
@@ -73,7 +78,7 @@ int main(int argc, char *argv[])
   for (int step = 1; step <= numSteps; step++) {
 
     // Compute next time point
-    walkring_timestep(w, N, p, rank, size, w_length);
+    walkring_timestep(w, N, p, rank, size, Z);
 
     // Update time
     time += dt;
