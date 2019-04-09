@@ -58,18 +58,20 @@ int main(int argc, char *argv[])
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
   MPI_Finalize();
+  
+  w_new[] = w; // Turning rarray into a regular C++ array for MPI
   // Time evolution
   for (int step = 1; step <= numSteps; step++) {
 
     // Compute next time point
-    walkring_timestep(w, N, p, rank, size);
+    walkring_timestep(w_new, N, p, rank, size);
 
     // Update time
     time += dt;
 
     // Periodically add data to the file
     if (step % outputEvery == 0 and step > 0)      
-      walkring_output(file, step, time, N, w, outputcols);
+      walkring_output(file, step, time, N, w_new, outputcols);
   }
   
   // Close file
