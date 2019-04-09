@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
   int w[Z];
   // Setup initial conditions for w
   //w.fill(N/2);
-  std::fill(w,w+w.size(),(N/2));
+  w_length = ((sizeof w) / (sizeof w[0])) // getting length of w
+  std::fill(w,w+w_length,(N/2));
    // Setup initial time
   double time = 0.0;
 
