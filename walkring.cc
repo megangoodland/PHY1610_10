@@ -8,6 +8,7 @@
 
 #include <fstream>
 #include <rarray>
+#include <algorithm>
 #include <cmath>
 #include <mpi.h>
 #include "walkring_output.h"
@@ -40,9 +41,11 @@ int main(int argc, char *argv[])
   const int outputcols = 48;             // number of columns for sparkline output
     
   // Allocate walker data
-  rarray<int,1> w(Z);
+  //rarray<int,1> w(Z);
+  int w[Z];
   // Setup initial conditions for w
-  w.fill(N/2);
+  //w.fill(N/2);
+  std::fill(std::begin(w),std::end(w),(N/2));
    // Setup initial time
   double time = 0.0;
 
@@ -51,6 +54,7 @@ int main(int argc, char *argv[])
   walkring_output_init(file, datafile);  
   // Initial output to screen
   walkring_output(file, 0, time, N, w, outputcols);
+  
   // Hello world
   int rank, size;
   MPI_Init(&argc, &argv);
@@ -59,19 +63,20 @@ int main(int argc, char *argv[])
   std::cout<< "Hello from task" + std::to_string(rank) + " of " + std::to_string(size) + " world\n";
   MPI_Finalize();
   
-  int w_new[] = w; // Turning rarray into a regular C++ array for MPI
+  //int w_new[] = w; // Turning rarray into a regular C++ array for MPI
+  
   // Time evolution
   for (int step = 1; step <= numSteps; step++) {
 
     // Compute next time point
-    walkring_timestep(w_new, N, p, rank, size);
+    walkring_timestep(w, N, p, rank, size);
 
     // Update time
     time += dt;
 
     // Periodically add data to the file
     if (step % outputEvery == 0 and step > 0)      
-      walkring_output(file, step, time, N, w_new, outputcols);
+      walkring_output(file, step, time, N, w, outputcols);
   }
   
   // Close file
