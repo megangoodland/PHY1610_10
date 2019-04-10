@@ -61,6 +61,8 @@ int main(int argc, char *argv[])
   
   
   if (rank ==0){
+    std::cout << "This is size: " + to_string(size) + "\n";
+    
     // Copy reg type array to printout rarray
     for (int i = 0; i < Z; i++) {w_print[i] = w[i];}
     
