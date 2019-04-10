@@ -8,6 +8,7 @@
 #include <random>
 #include <iostream>
 #include <string>
+#include <chrono>
 #include <mpi.h>
 
 // Perform a single time step for the random walkers
@@ -35,7 +36,7 @@
 //
 void walkring_timestep(int walkerpositions[], int N, double prob, int rank, int size, int length)
 {
-    static std::mt19937 engine(13);
+    static std::mt19937 engine(std::chrono::system_clock::now().time_since_epoch().count());
     static std::uniform_real_distribution<> uniform;
     int Z = length;
     // move all walkers
